@@ -1,0 +1,60 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[notoc,noabs]{HaotianReport}
+
+\title{第一次作业：QQ群组数据统计分析}
+\author{刘昊天}
+\authorinfo{电博181班, 2018310648}
+\runninghead{大数据分析(B)课程报告}
+\studytime{2018年10月}
+
+\begin{document}
+    \maketitle
+    %\newpage
+    \section{任务1} % (fold)
+    \paragraph{问题描述} % (fold)
+    Recall and write down the assumptions which one-way ANOVA are based on.
+    \begin{enumerate}
+        \item 独立性：数据是随机采样的，也就是说样本应是相互独立的随机样本；
+        \item 正态性：样本残差是正态分布的；
+        \item 等方差：各样本采样的总体方差相等。
+    \end{enumerate}
+    \section{任务2} % (fold)
+    \paragraph{问题描述} % (fold)
+    Focus on two columns: Category (Col[2]) and Average Age (Col[7]). Taking feature Average Age as an example, we want to measure whether the average age varied significantly across the categories. Clearly state the null (H0) and the alternative (H1) hypotheses for this task.
+
+    
+    \section{任务3} % (fold)
+    Use your favorite statistics analysis software, like Matlab, R, Excel, SPSS or ...
+    \subsection{问题1} % (fold)
+    \paragraph{问题描述} Draw the empirical probability density function of Col[7], i.e. the empirical pdf of average age. Does the data in this dimension follow Gaussian distribution? Test normality of Col[7].
+    \subsection{问题2} % (fold)
+    \paragraph{问题描述} In Col[7], there are 5 components divided by category labels. We denote the data in Col[7] with category i (where i = 1,...,5) as Col[7| categoty=i]. Test the normality of each components and test the homogeneity of variances.
+    \subsection{问题3}
+    \paragraph{问题描述} Do the one-way ANOVA test for Col[7] with categories in Col[2]. Write down your conclusion, supporting statistics, and visualize your data which inspire the process.
+    \section{任务4} % (fold)
+    \paragraph{问题描述} Choose another 3 columns, draw the empirical pdf of each feature columns and test which column follows these assumptions in question 1? How about their corresponding log transformation?
+    \section{任务5} % (fold)
+    \subsection{问题1} % (fold)
+    \paragraph{问题描述} Find and list the possible solutions set.
+    \subsection{问题2}
+    \paragraph{问题描述} Do the one-way ANOVA on the 3 columns you choose. Do these feature columns vary significantly? Visualize the results.
+    \section{任务6} % (fold)
+    \paragraph{问题描述} Redo the ANOVA test in question 3 c) by sampling 10\% data (i.e. around 200 groups). Repeat 10 times and compute the mean and standard deviation of the supporting statistics (F value). Compare at least two sampling strategies. Which sampling method is more stable? How are the results compared to the results without sampling? Why?
+    \section{任务7} % (fold)
+    \paragraph{问题描述} Choose any two categories, and classify them by logistical regression, or you can try multi-label classification on all categories.
+    \label{applastpage}
+    \newpage
+    \bibliography{report}
+    \bibliographystyle{unsrt}
+\iffalse
+\begin{itemize}[noitemsep,topsep=0pt]
+%no white space
+\end{itemize}
+\begin{enumerate}[label=\Roman{*}.,noitemsep,topsep=0pt]
+%use upper case roman
+\end{enumerate}
+\begin{multicols}{2}
+%two columns
+\end{multicols}
+\fi
+\end{document}
