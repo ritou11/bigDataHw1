@@ -13,7 +13,7 @@
     \section{任务1} % (fold)
     \paragraph{问题描述} % (fold)
     Recall and write down the assumptions which one-way ANOVA are based on.
-    
+
     \begin{enumerate}
         \item 独立性：数据是随机采样的，也就是说样本应是相互独立的随机样本；
         \item 正态性：样本残差是正态分布的；
@@ -21,7 +21,7 @@
     \end{enumerate}
     \section{任务2} % (fold)
     \paragraph{问题描述} Focus on two columns: Category (Col[2]) and Average Age (Col[7]). Taking feature Average Age as an example, we want to measure whether the average age varied significantly across the categories. Clearly state the null (H0) and the alternative (H1) hypotheses for this task.
-    
+
     首先对数据进行观察，如\cref{fig:task2-boxplot}所示。可见，对于不同的群主题（类型），平均年龄分布有显著差别。当然，平均年龄分布的平均值差异并不能反映各群主题的平均年龄差异，该图仅能表明平均年龄分布有一定差异。由此，我们对该问题有一定的心理预期（希望用假设检验方法佐证平均年龄分布的差异），这对我们制定H0与H1是有关键影响的。
     \begin{figure}[htbp]
         \centering
@@ -36,7 +36,7 @@
 
         H1：不同主题的群之间，平均年龄的分布差异显著。
     \end{quote}
-    
+
     \section{任务3} % (fold)
     Use your favorite statistics analysis software, like Matlab, R, Excel, SPSS or ...
     \subsection{问题1} % (fold)
@@ -50,23 +50,25 @@
         \label{fig:task3-pdf}
     \end{figure}
 
-    可以看到，其相较于正态分布，曲线腰部更瘦，且有明显偏移。为了对该分布的正态性进行验证，可以利用课堂上提到的Skew and Kurtosis Test方法，即偏度-峰度检验。该检验的原假设为“被试分布具有正态性”，备择假设为“被试分布不具备正态性”。得到计算结果如\cref{task4q1log}所示。
-    \lstinputlisting[label=task4q1log]{task4q1.log}
+    可以看到，其相较于正态分布，曲线腰部更瘦，且有明显偏移。为了对该分布的正态性进行验证，可以利用课堂上提到的Skew and Kurtosis Test方法，即偏度-峰度检验。该检验的原假设为“被试分布具有正态性”，备择假设为“被试分布不具备正态性”。得到计算结果如\cref{task3q1log}所示。
+    \lstinputlisting[label=task3q1log]{task3q1.log}
 
     可见，在选取$\alpha=0.05$作为标准时，$pValue<\alpha=0.05$，即有充分把握拒绝原假设，因此该分布不满足正态性。
 
     \subsection{问题2} % (fold)
     \paragraph{问题描述} In Col[7], there are 5 components divided by category labels. We denote the data in Col[7] with category i (where i = 1,...,5) as Col[7| categoty=i]. Test the normality of each components and test the homogeneity of variances.
 
-    分组后进行同样的检验操作，得到结果如\cref{task4q2log}。可以直接看出，类别编号1，4，5组的平均年龄不满足正态性，类别编号2、3的组可以认为满足正态性。
-    \lstinputlisting[label=task4q2log]{task4q2.log}
+    分组后进行同样的检验操作，得到结果如\cref{task3q2log}。可以直接看出，类别编号1，4，5组的平均年龄不满足正态性，类别编号2、3的组可以认为满足正态性。
+    \lstinputlisting[label=task3q2log]{task3q2.log}
 
-    对于方差齐的检验，应使用TODO
+    对于方差齐的检验，应使用课程中提及的2倍标准差判据。对各组标准差进行计算，并取其中最大值、最小值进行比较，结果如\cref{task3std}。可见，同学会的平均年龄标准差是最大的，业主的平均年龄标准差是最小的。这个结论在\cref{fig:task2-boxplot}的箱图中也可以看出。另一方面，从社会经验上看，同学会存在于各个年龄段，而业主则主要是实现了积累的中老年，符合此处的结论。
+    \lstinputlisting[label=task3std]{task3std.log}
+
     \subsection{问题3}
     \paragraph{问题描述} Do the one-way ANOVA test for Col[7] with categories in Col[2]. Write down your conclusion, supporting statistics, and visualize your data which inspire the process.
 
-    利用F检验计算ANOVA，得到结果如\cref{task4q3log}所示。
-    \lstinputlisting[label=task4q3log]{task4q3.log}
+    利用F检验计算ANOVA，得到结果如\cref{task3q3log}所示。
+    \lstinputlisting[label=task3q3log]{task3q3.log}
     TODO
 
     \section{任务4} % (fold)
@@ -76,25 +78,29 @@
 
     \begin{figure}[htbp]
         \centering
-        \includegraphics[width=0.95\textwidth]{task5-性别比-pdf}
+        \includegraphics[width=0.95\textwidth]{task4-性别比-pdf}
         \caption{性别比经验概率密度函数}
         \label{fig:gender}
     \end{figure}
     \begin{figure}[htbp]
         \centering
-        \includegraphics[width=0.95\textwidth]{task5-无回应比例-pdf}
+        \includegraphics[width=0.95\textwidth]{task4-无回应比例-pdf}
         \caption{无回应比例经验概率密度函数}
         \label{fig:noresponse}
     \end{figure}
     \begin{figure}[htbp]
         \centering
-        \includegraphics[width=0.95\textwidth]{task5-夜聊比例-pdf}
+        \includegraphics[width=0.95\textwidth]{task4-夜聊比例-pdf}
         \caption{夜聊比例经验概率密度函数}
         \label{fig:nightchat}
     \end{figure}
 
-    针对以上三个特征的正态性进行检验，同样使用偏度-峰度法，得到结果如\cref{task5norm}。结果显示三组均不满足正态性。
-    \lstinputlisting[label=task5norm]{task5norm.log}
+    针对以上三个特征的正态性进行检验，同样使用偏度-峰度法，得到结果如\cref{task4norm}。结果显示三组均不满足正态性。
+    \lstinputlisting[label=task4norm]{task4norm.log}
+    TODO: 等方差
+
+    对这三组数据进行对数变换，即$y=\log(x)$。注意到，$x=0$为奇异点，因此在实际应用中需要考虑零值的处理方式。首先，对所选数据的零值数量进行统计，得到如\cref{task4zerocount}的结果。
+    \lstinputlisting[label=task4zerocount]{task4zerocount.log}
 
     \section{任务5} % (fold)
     How to do one-way ANOVA with the non-normal data?
