@@ -96,11 +96,16 @@ choices = ['性别比', '无回应比例', '图片比例']
 with open('report/task4norm.log', 'w', encoding='utf8') as resFile:
     for c in choices:
         # pdf plot
+        # TODO: put them in subplots
         plot_pdf(c)
         plt.savefig('report/figure/task4-%s-pdf.png' % c, dpi=300)
         resStr = doThreeTest(projData, c)[0]
         print('%s %s' % (c, resStr), file=resFile)
         plt.clf()
+    for c in choices:
+        print('%s MaxStd / MinStd = %.2f' %
+            (c, projData.groupby('主题')[c].std().max() / projData.groupby('主题')[c].std().min()),
+            file=resFile)
 
 with open('report/task4zerocount.log', 'w', encoding='utf8') as resFile:
     print('Zero count', file=resFile)
@@ -110,12 +115,14 @@ with open('report/task4lognorm0.log', 'w', encoding='utf8') as res0File:
     with open('report/task4lognorm.log', 'w', encoding='utf8') as resFile:
         for c in choices:
             # log pdf plot
+            # TODO: put them in subplots
             sns.distplot(np.log(1e-6 + projData[c]))
             plt.title('%s log PDF图' % c)
             plt.xlabel('%s/岁' % c)
             plt.savefig('report/figure/task4-%s-logpdf.png' % c, dpi=300)
             plt.clf()
             # log without 0 pdf plot
+            # TODO: put them in subplots
             cdt = projData.loc[projData[c] != 0]
             sns.distplot(np.log(cdt[c]))
             plt.title('%s 去零 log PDF图' % c)
@@ -130,3 +137,12 @@ with open('report/task4lognorm0.log', 'w', encoding='utf8') as res0File:
             ntN, ntP = stats.normaltest(np.log(cdt[c]))
             print('%s Skew and Kurtosis Test: N=%s, P=%s' %
                   (c, ntN, ntP), file=res0File)
+        for c in choices:
+            lcdt = projData.groupby('主题')[c].apply(lambda d: np.log(d + 1e-6).std())
+            print('%s MaxStd / MinStd = %.2f' %
+                (c, lcdt.max() / lcdt.min()),
+                file=resFile)
+            lcdt = projData.loc[projData[c] != 0].groupby('主题')[c].apply(lambda d: np.log(d).std())
+            print('%s MaxStd / MinStd = %.2f' %
+                (c, lcdt.max() / lcdt.min()),
+                file=res0File)
