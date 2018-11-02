@@ -146,3 +146,13 @@ with open('report/task4lognorm0.log', 'w', encoding='utf8') as res0File:
             print('%s MaxStd / MinStd = %.2f' %
                 (c, lcdt.max() / lcdt.min()),
                 file=res0File)
+
+# task 5
+with open('report/task5kwtest.log','w', encoding='utf8') as resFile:
+    for c in choices:
+        gp = projData.groupby('主题')[c]
+        gpl = list()
+        for gpn in gp.groups:
+            gpl.append(gp.get_group(gpn))
+        kwS, kwP = stats.kruskal(*gpl)
+        print('%s K-W Test: s=%s, p=%s' % (c, kwS, kwP), file=resFile)

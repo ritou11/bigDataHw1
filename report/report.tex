@@ -147,8 +147,13 @@
     How to do one-way ANOVA with the non-normal data?
     \subsection{问题1} % (fold)
     \paragraph{问题描述} Find and list the possible solutions set.
+    \begin{enumerate}
+      \item One-way ANOVA对于正态性假设来说是鲁棒的，样本的费正态性对Type-I错误的影响较小，因此可以依然使用One-way ANOVA算法。
+      \item 使用非参数Kruskal-Wallis H检验。
+    \end{enumerate}
     \subsection{问题2}
     \paragraph{问题描述} Do the one-way ANOVA on the 3 columns you choose. Do these feature columns vary significantly? Visualize the results.
+    \lstinputlisting[label=task5kwtest]{task5kwtest.log}
     \section{任务6} % (fold)
     \paragraph{问题描述} Redo the ANOVA test in question 3 c) by sampling 10\% data (i.e. around 200 groups). Repeat 10 times and compute the mean and standard deviation of the supporting statistics (F value). Compare at least two sampling strategies. Which sampling method is more stable? How are the results compared to the results without sampling? Why?
     \section{任务7} % (fold)
