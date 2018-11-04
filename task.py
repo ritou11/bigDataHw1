@@ -104,8 +104,9 @@ with open('report/task4norm.log', 'w', encoding='utf8') as resFile:
         plt.clf()
     for c in choices:
         print('%s MaxStd / MinStd = %.2f' %
-            (c, projData.groupby('主题')[c].std().max() / projData.groupby('主题')[c].std().min()),
-            file=resFile)
+              (c, projData.groupby('主题')[c].std().max(
+              ) / projData.groupby('主题')[c].std().min()),
+              file=resFile)
 
 with open('report/task4zerocount.log', 'w', encoding='utf8') as resFile:
     print('Zero count', file=resFile)
@@ -138,17 +139,19 @@ with open('report/task4lognorm0.log', 'w', encoding='utf8') as res0File:
             print('%s Skew and Kurtosis Test: N=%s, P=%s' %
                   (c, ntN, ntP), file=res0File)
         for c in choices:
-            lcdt = projData.groupby('主题')[c].apply(lambda d: np.log(d + 1e-6).std())
+            lcdt = projData.groupby('主题')[c].apply(
+                lambda d: np.log(d + 1e-6).std())
             print('%s MaxStd / MinStd = %.2f' %
-                (c, lcdt.max() / lcdt.min()),
-                file=resFile)
-            lcdt = projData.loc[projData[c] != 0].groupby('主题')[c].apply(lambda d: np.log(d).std())
+                  (c, lcdt.max() / lcdt.min()),
+                  file=resFile)
+            lcdt = projData.loc[projData[c] != 0].groupby(
+                '主题')[c].apply(lambda d: np.log(d).std())
             print('%s MaxStd / MinStd = %.2f' %
-                (c, lcdt.max() / lcdt.min()),
-                file=res0File)
+                  (c, lcdt.max() / lcdt.min()),
+                  file=res0File)
 
 # task 5
-with open('report/task5kwtest.log','w', encoding='utf8') as resFile:
+with open('report/task5kwtest.log', 'w', encoding='utf8') as resFile:
     for c in choices:
         gp = projData.groupby('主题')[c]
         gpl = list()
@@ -156,3 +159,34 @@ with open('report/task5kwtest.log','w', encoding='utf8') as resFile:
             gpl.append(gp.get_group(gpn))
         kwS, kwP = stats.kruskal(*gpl)
         print('%s K-W Test: s=%s, p=%s' % (c, kwS, kwP), file=resFile)
+
+for c in choices:
+    sns.violinplot(x='主题', y=c, data=projData)
+    plt.title('%s在主题上分布小提琴图' % c)
+    plt.savefig('report/figure/task5-%s-boxplot.png' % c, dpi=300)
+    plt.clf()
+
+# task 6
+
+
+def ftest_theme(dt, c):
+    gp = dt.groupby('主题')[c]
+    gpl = list()
+    for gpn in gp.groups:
+        gpl.append(gp.get_group(gpn))
+    fvalue, pvalue = stats.f_oneway(*gpl)
+    return fvalue, pvalue
+
+
+rand_sample = projData.sample(frac=0.1)
+group_sample = projData.groupby('主题').apply(
+    lambda d: d.sample(frac=0.1))
+weight_sample = projData.sample(frac=0.1, weights='群人数')
+gw_sample = projData.groupby('主题').apply(
+    lambda d: d.sample(frac=0.1, weights='群人数'))
+for c in choices:
+    rand_f, rand_p = ftest_theme(rand_sample, c)
+    group_f, group_p = ftest_theme(group_sample, c)
+    weight_f, weight_p = ftest_theme(weight_sample, c)
+    gw_f, gw_p = ftest_theme(gw_sample, c)
+    print(rand_f, group_f, weight_f, gw_f)
