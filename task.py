@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set(color_codes=True)
 sns.set_style({
-    'font.family': '.PingFang SC',
-    #    'font.family': 'STSong',
+    # 'font.family': '.PingFang SC',
+    'font.family': 'STSong',
     'axes.unicode_minus': False
 })
 import pandas as pd
@@ -19,6 +19,10 @@ import numpy as np
 from scipy import stats
 import statsmodels.api as sm
 from statsmodels.formula.api import ols
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn import svm
+import itertools
 
 # read data
 
@@ -168,6 +172,8 @@ for c in choices:
 
 # task 6
 
+choices = ['性别比', '无回应比例', '图片比例', '平均年龄']
+
 
 def ftest_theme(dt, c):
     gp = dt.groupby('主题')[c]
@@ -184,6 +190,7 @@ for c in choices:
     weightfs = list()
     gwfs = list()
     for t in range(10):
+        org_sample = projData
         rand_sample = projData.sample(frac=0.1)
         group_sample = projData.groupby('主题').apply(
             lambda d: d.sample(frac=0.1))
@@ -198,15 +205,50 @@ for c in choices:
         groupfs.append(group_f)
         weightfs.append(weight_f)
         gwfs.append(gw_f)
-    res = pd.DataFrame({'rand':randfs,
+    res = pd.DataFrame({'org': orgfs,
+                'rand':randfs,
                 'group': groupfs,
                 'weight': weightfs,
                 'group-weight': gwfs})
     dt[c] = res.var()
+
 res = pd.DataFrame(dt)
 with open('report/task6-fvar.log', 'w', encoding='utf8') as resFile:
     print(res, file=resFile)
-
 res = res.apply(lambda d: (d - d.mean()) / d.std())
 res.transpose().plot(kind='bar')
-plt.show()
+plt.savefig('report/figure/task6-favr.png', dpi=300)
+
+
+# task 7
+
+def get_groups(gpdata, groups):
+    res = pd.DataFrame()
+    for g in groups:
+        res = res.append(gpdata.get_group(g))
+    return res
+
+testRatio = 0.1
+classes = ['同学会', '业主', '投资理财', '行业交流', '游戏']
+features = ['性别比', '群人数', '消息数', '稠密度', '年龄差', '平均年龄', '地域集中度', '手机比例', '会话数', '无回应比例', '夜聊比例', '图片比例']
+# norm_cols = ['年龄差', '消息数', '群人数', '平均年龄']
+norm_cols = ['性别比', '群人数', '消息数', '稠密度', '年龄差', '平均年龄', '地域集中度', '手机比例', '会话数', '无回应比例', '夜聊比例', '图片比例']
+normData = projData.apply(lambda d: (d - d.mean()) / d.std() if d.name in norm_cols else d)
+
+lrdata = get_groups(normData.groupby('主题'), classes)
+X_train, X_test, y_train, y_test = train_test_split(lrdata[features], lrdata['群类别'], test_size=testRatio)
+clf = LogisticRegression().fit(X_train, y_train)
+y_pred = clf.predict(X_test)
+clfsvm = svm.SVC(C=1.5).fit(X_train, y_train)
+with open('report/task6-multi.log', 'w', encoding='utf8') as resFile:
+    print('Logistic Regression accur. = %.2f%%' % (100 * np.mean(y_pred == y_test)), file=resFile)
+    print('Support Vector Machine accur. = %.2f%%' % (clfsvm.score(X_test, y_test) * 100), file=resFile)
+
+with open('report/task6-two.log', 'w', encoding='utf8') as resFile:
+    for fs in itertools.combinations(classes, 2):
+        lrdata = get_groups(normData.groupby('主题'), fs)
+        X_train, X_test, y_train, y_test = train_test_split(lrdata[features], lrdata['群类别'], test_size=testRatio)
+        clf = LogisticRegression().fit(X_train, y_train)
+        clfsvm = svm.SVC(C=1.5).fit(X_train, y_train)
+        print(fs, file=resFile)
+        print('Logistic Regression accur. = %.2f%%, Support Vector Machine accur. = %.2f%%' % (clf.score(X_test, y_test) * 100, clfsvm.score(X_test, y_test) * 100), file=resFile)
