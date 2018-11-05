@@ -177,16 +177,36 @@ def ftest_theme(dt, c):
     fvalue, pvalue = stats.f_oneway(*gpl)
     return fvalue, pvalue
 
-
-rand_sample = projData.sample(frac=0.1)
-group_sample = projData.groupby('主题').apply(
-    lambda d: d.sample(frac=0.1))
-weight_sample = projData.sample(frac=0.1, weights='群人数')
-gw_sample = projData.groupby('主题').apply(
-    lambda d: d.sample(frac=0.1, weights='群人数'))
+dt = {}
 for c in choices:
-    rand_f, rand_p = ftest_theme(rand_sample, c)
-    group_f, group_p = ftest_theme(group_sample, c)
-    weight_f, weight_p = ftest_theme(weight_sample, c)
-    gw_f, gw_p = ftest_theme(gw_sample, c)
-    print(rand_f, group_f, weight_f, gw_f)
+    randfs = list()
+    groupfs = list()
+    weightfs = list()
+    gwfs = list()
+    for t in range(10):
+        rand_sample = projData.sample(frac=0.1)
+        group_sample = projData.groupby('主题').apply(
+            lambda d: d.sample(frac=0.1))
+        weight_sample = projData.sample(frac=0.1, weights='群人数')
+        gw_sample = projData.groupby('主题').apply(
+            lambda d: d.sample(frac=0.1, weights='群人数'))
+        rand_f, rand_p = ftest_theme(rand_sample, c)
+        group_f, group_p = ftest_theme(group_sample, c)
+        weight_f, weight_p = ftest_theme(weight_sample, c)
+        gw_f, gw_p = ftest_theme(gw_sample, c)
+        randfs.append(rand_f)
+        groupfs.append(group_f)
+        weightfs.append(weight_f)
+        gwfs.append(gw_f)
+    res = pd.DataFrame({'rand':randfs,
+                'group': groupfs,
+                'weight': weightfs,
+                'group-weight': gwfs})
+    dt[c] = res.var()
+res = pd.DataFrame(dt)
+with open('report/task6-fvar.log', 'w', encoding='utf8') as resFile:
+    print(res, file=resFile)
+
+res = res.apply(lambda d: (d - d.mean()) / d.std())
+res.transpose().plot(kind='bar')
+plt.show()
