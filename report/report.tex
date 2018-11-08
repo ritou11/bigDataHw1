@@ -151,18 +151,66 @@
       \item One-way ANOVA对于正态性假设来说是鲁棒的，样本的费正态性对Type-I错误的影响较小，因此可以依然使用One-way ANOVA算法。
       \item 使用非参数Kruskal-Wallis H检验。
     \end{enumerate}
+
+    H检验不需要各样本总体为正态分布，常被用于检验多个总体的分布是否存在显著差异。其原假设是: 多个独立样本来自的多个总体的分布无显著差异，备择假设则是多个总体的分布有显著差异。多独立样本 Kruskal-Wallis 检验的基本思想是:首先，将多组样本数混合并按升序 排序，求出各变量值的秩;然后，考察各组秩的均值是否存在显著差异。 如果各组秩的均值不存在显著差异， 则认为多组数据充分混合，数值相差不大，可以认为多个总体的分布无显著差异;反之，如果各组秩的均值存 在显著差异，则是多组数据无法混合，有些组的数值普遍偏大，有些组的数值普遍偏小，可认为多个总体的分 布存在显著差异，至少有一个样本不同于其他样本。[TODO ref]
+
+    K-W统计量可表达为\cref{eq:kw}，随后可用卡方分布获得置信概率。
+    \begin{equation}
+      \label{eq:kw}
+      KW = \frac{12}{n(n+1)}\sum_{i=1}^k{\frac{R_i^2}{n_i}-3(n+1)}
+    \end{equation}
     \subsection{问题2}
     \paragraph{问题描述} Do the one-way ANOVA on the 3 columns you choose. Do these feature columns vary significantly? Visualize the results.
+
+    采用非参数的Kruskal-Wallis检验法，对三种特征进行检验，结果如\cref{task5kwtest}所示。可见，检验均拒绝了原假设，因此我们有充分的把握，说明对于这三种特征而言，五种类别是有显著区别的。
     \lstinputlisting[label=task5kwtest]{task5kwtest.log}
+
+    TODO：visualize
+
     \section{任务6} % (fold)
     \paragraph{问题描述} Redo the ANOVA test in question 3 c) by sampling 10\% data (i.e. around 200 groups). Repeat 10 times and compute the mean and standard deviation of the supporting statistics (F value). Compare at least two sampling strategies. Which sampling method is more stable? How are the results compared to the results without sampling? Why?
     \section{任务7} % (fold)
     \paragraph{问题描述} Choose any two categories, and classify them by logistical regression, or you can try multi-label classification on all categories.
+    所谓Logistics Regression，是指一种基于Logistics函数的广义线性回归。Logistics函数又称Sigmoid函数，表达式如\cref{eq:sigmoid}所示。【TODO：ref】
+    \begin{equation}
+      \label{eq:sigmoid}
+      \sigma(z) = \frac{1}{1+e^{-z}}
+    \end{equation}
 
-    任选两个类别的群，应用Logistic Regression及SVM算法进行预测，预测准确率统计如\cref{task6-two}所示。
+    Sigmoid函数是连续可微的函数，它可以将任意的$z$值映射到0和1附近，类似于阶跃函数。这种特性使得Sigmoid函数广泛应用于分类当中。函数图像如\cref{fig:sigmoid}所示，可以看到，该图像近似在0附近阶跃。
+    \begin{figure}
+      \includegraphics{task7-sigmoid}
+      \caption{Sigmoid函数图像}
+      \label{fig:sigmoid}
+    \end{figure}
+
+    若以$h_\theta(x)$代表特征变量$x$对应分类$y=1$的概率，则分类$y=0$的概率为$1-h_\theta(x)$。故可将概率函数表达为\cref{eq:lr_poss}。
+    \begin{equation}
+      \label{eq:lr_poss}
+      \begin{aligned}
+        h_\theta(x) &= 1-\frac{1}{1-e^{-\theta^T x}} \\
+        P(y|x;\theta) &= (h_\theta(x))^y (1-h_\theta(x))^{1-y}
+      \end{aligned}
+    \end{equation}
+
+    由于$n$个样本相互独立，则联合分布可以表示为各边际分布的乘积，似然函数可表示为\cref{eq:l}。
+    \begin{equation}
+      \label{eq:l}
+      L(\theta) = \prod_{i}^n {P(y^{(i)}|x^{(i)};\theta)} = \prod_{i}^n {(h_\theta(x^{(i)}))^{y^{(i)}} (1-h_\theta(x^{(i)}))^{1-y^{(i)}}}
+    \end{equation}
+
+    取似然函数的对数，得到\cref{eq:logl}。
+    \begin{equation}
+      \label{eq:logl}
+      l(\theta) = \log(L(\theta)) = \sum_{i}^n {y^{(i)} \log(h_\theta(x^{(i)})) + (1 - y^{(i)}) \log(h_\theta(1-x^{(i)}))}
+    \end{equation}
+
+    应用极大似然法，使用梯度下降求解问题$\min^{\theta} l(\theta)$即可求得一组参数$\theta^*$。
+
+    对于本问题，任选两个类别的群，应用Logistic Regression及SVM(Support Vector Machine)算法进行预测。SVM算法在多维分类问题上往往有出色的表现，近年来被广泛应用，此处作为对比。其中训练样本比例取为0.9，测试样本比例选为0.1。预测准确率统计如\cref{task6-two}所示。根据结果可见，在不同的类别之间，Logistics回归算法与SVM算法的表现均有所变化，且变化趋势相近，范围大致在75\%-95\%之间变化。同时，不同的类别组合下，Logistics回归与SVM各有优劣，总体上SVM算法更加稳定。
     \lstinputlisting[label=task6-two]{task6-two.log}
 
-    尝试同时辨别5种类别的群，预测准确率如\cref{}所示。
+    尝试同时辨别5种类别的群，采用同样的样本划分方式，预测准确率如\cref{task6-multi}所示。此处可见，SVM算法在多类别划分上更有优势。
     \lstinputlisting[label=task6-multi]{task6-multi.log}
     \label{applastpage}
     \newpage

@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set(color_codes=True)
 sns.set_style({
-    # 'font.family': '.PingFang SC',
-    'font.family': 'STSong',
+    'font.family': '.PingFang SC',
+    # 'font.family': 'STSong',
     'axes.unicode_minus': False
 })
 import pandas as pd
@@ -205,8 +205,7 @@ for c in choices:
         groupfs.append(group_f)
         weightfs.append(weight_f)
         gwfs.append(gw_f)
-    res = pd.DataFrame({'org': orgfs,
-                'rand':randfs,
+    res = pd.DataFrame({'rand':randfs,
                 'group': groupfs,
                 'weight': weightfs,
                 'group-weight': gwfs})
@@ -217,10 +216,19 @@ with open('report/task6-fvar.log', 'w', encoding='utf8') as resFile:
     print(res, file=resFile)
 res = res.apply(lambda d: (d - d.mean()) / d.std())
 res.transpose().plot(kind='bar')
-plt.savefig('report/figure/task6-favr.png', dpi=300)
-
+plt.savefig('report/figure/task6-fvar.png', dpi=300)
+plt.clf()
 
 # task 7
+
+sigmoid_x = np.linspace(-10, 10, 100)
+sigmoid_y = 1 / (1 + np.exp(- sigmoid_x))
+sns.lineplot(sigmoid_x, sigmoid_y)
+plt.xlabel('z')
+plt.ylabel('Sigmoid(z)')
+plt.title('Sigmoid函数图像')
+plt.savefig('report/figure/task7-sigmoid.png', dpi=300)
+plt.clf()
 
 def get_groups(gpdata, groups):
     res = pd.DataFrame()
