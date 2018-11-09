@@ -69,14 +69,27 @@
     \subsection{问题3}
     \paragraph{问题描述} Do the one-way ANOVA test for Col[7] with categories in Col[2]. Write down your conclusion, supporting statistics, and visualize your data which inspire the process.
 
-    利用F检验计算ANOVA，得到结果如\cref{tbl:task3q3}所示。注意到，$PR<\alpha=0.05$，因此有充分把握拒绝原假设。故结论是，不同主题的群之间，平均年龄的分布差异显著。
+    利用F检验计算ANOVA，得到结果如\cref{tbl:task3q3}所示。注意到，$PR<\alpha=0.05$，因此有充分把握拒绝原假设。故结论是，不同主题的群之间，平均年龄的分布差异显著。该结论也可以直观地从\cref{fig:task3q3}中看出。
     \begin{table}
       \centering
       \caption{平均年龄-群类别ANOVA}
       \label{tbl:task3q3}
       \include{meta/task3q3}
     \end{table}
-    TODO
+    \begin{figure}
+      \centering
+      \includegraphics{task3q3}
+      \caption{不同群类别平均年龄经验概率分布}
+      \label{fig:task3q3}
+    \end{figure}
+
+    ANOVA的过程实际上就是比较组内偏差和组间偏差（$SS_w, SS_b$），从而获得F统计量。\cref{fig:task3q3-norm}展示了各个分组的参数正态分布概率密度函数，该分部是使用各组数据的平均值和标准差得到的，可以反映理想情况（数据均为正态，这是ANOVA的假设条件）下的数据分布。黑色虚线标记了各组的均值位置，黑色实线标记了总体的均值位置，这反应了ANOVA的计算过程。
+    \begin{figure}
+      \centering
+      \includegraphics{task3q3-norm}
+      \caption{不同群类别平均年龄参数正态分布}
+      \label{fig:task3q3-norm}
+    \end{figure}
 
     \section{任务4} % (fold)
     \paragraph{问题描述} Choose another 3 columns, draw the empirical pdf of each feature columns and test which column follows these assumptions in question 1? How about their corresponding log transformation?
@@ -101,6 +114,7 @@
     如果采用方案1，求得的概率密度函数如\cref{fig:task4loggnn}所示，相应的正态性检验结果如\cref{task4lognorm}所示，可见，三组数据的对数变换均不满足正态性。图片比例的对数变换满足方差齐，而其他两个特征不满足方差齐。
 
     \begin{figure}
+      \centering
       \includegraphics[width=\textwidth]{task4-logpdf}
       \caption{三组特征对数变换概率密度函数}
       \label{fig:task4loggnn}
@@ -138,6 +152,7 @@
 
     从\cref{fig:violin3}中可以看出，对于每一组特征，五个类别的分布函数不尽相同，因此也可以直观看出他们有显著区别。
     \begin{figure}
+      \centering
       \includegraphics[width=\textwidth]{task5-boxplot}
       \caption{三组特征小提琴图}
       \label{fig:violin3}
@@ -154,7 +169,7 @@
       \item 分层权重抽样(group-weight)：即在依据类别分层的同时，也依据群人数权重决定选中概率。
     \end{enumerate}
 
-    利用以上4种抽样策略，重做对平均年龄的ANOVA。为了进一步验证抽样策略的有效性，此处还对前文所选的另外三个特征重做ANOVA。分别计算10次得到一组F值，按照题目要求计算均值和方差，结果分别如\cref{tbl:task6-fmean, tbl:task6-fvar}所示。
+    利用以上4种抽样策略，重做对平均年龄的ANOVA。为了进一步验证抽样策略的有效性，此处还对前文所选的另外三个特征重做ANOVA。分别计算10次得到一组F值，按照题目要求计算均值和方差，结果分别如\cref{tbl:task6-fmean,tbl:task6-fvar}所示。
 
     \begin{table}[htbp]
       \centering
@@ -172,12 +187,13 @@
     为了更直观地看出不同抽样方法的稳定性，可以将F值方差结果分别在不同特征上标准化，并作出柱状图，如\cref{fig:task6-fvar}所示。注意，由于经过了标准化，因此图中不同特征之间的柱无可比性，而实际上比较不同特征的F值方差也是没有意义的。从图中可以看到，在平均年龄上，随机抽样的稳定性表现较好，有更低的方差。但在其他的特征上，随机抽样未必会一直有良好的稳定性。例如，性别比特征中，分层权重抽样表现较好。
 
     \begin{figure}[htbp]
+      \centering
       \includegraphics{task6-fvar}
       \caption{F值方差对比}
       \label{fig:task6-fvar}
     \end{figure}
 
-    TODO 和无抽样的对比
+    对于平均年龄特征而言，同上文的无采样ANOVA进行对比，可以发现，无采样ANOVA得到的f值在171.5左右，而进行10\%采样后的f值则在20附近；相应的在f分布上查到的概率，无采样ANOVA的值也更小，意味着拒绝原假设更有把握。这是因为采样前数据量大，因而我们论定各类别在平均年龄上分布有显著差别时，把握更大；而采样后数据量变小，我们断定的把握也相应减小。
 
     \section{任务7} % (fold)
     \paragraph{问题描述} Choose any two categories, and classify them by logistical regression, or you can try multi-label classification on all categories.
@@ -189,6 +205,7 @@
 
     Sigmoid函数是连续可微的函数，它可以将任意的$z$值映射到0和1附近，类似于阶跃函数。这种特性使得Sigmoid函数广泛应用于分类当中。函数图像如\cref{fig:sigmoid}所示，可以看到，该图像近似在0附近阶跃。
     \begin{figure}
+      \centering
       \includegraphics{task7-sigmoid}
       \caption{Sigmoid函数图像}
       \label{fig:sigmoid}

@@ -79,6 +79,35 @@ with open('report/meta/task3q3.tex', 'w', encoding='utf8') as resFile:
     reportTable = sm.stats.anova_lm(lm, typ=1)
     print(reportTable.to_latex(), file=resFile)
 
+gp = projData.groupby('主题')['平均年龄']
+figure = plt.figure()
+for gpn in gp.groups:
+    sns.kdeplot(data=gp.get_group(gpn), shade=False, label=gpn)
+sns.kdeplot(data=projData['平均年龄'], shade=True, label='总体')
+plt.title('不同群类别平均年龄经验概率分布')
+plt.xlabel('年龄/岁')
+plt.tight_layout(h_pad=2)
+plt.savefig('report/figure/task3q3.png', dpi=300)
+ylim = plt.ylim()
+xlim = plt.xlim()
+plt.clf()
+
+x = np.linspace(5, 50, 1000)
+for gpn in gp.groups:
+    y = stats.norm.pdf(x, gp.get_group(gpn).mean(), gp.get_group(gpn).std())
+    sns.lineplot(x, y, label=gpn)
+    plt.plot(np.ones(10) * gp.get_group(gpn).mean(), np.linspace(np.max(y) - 0.02, np.max(y) + 0.02, 10), 'k-.')
+y = stats.norm.pdf(x, projData['平均年龄'].mean(), projData['平均年龄'].std())
+sns.lineplot(x, y, label='总体')
+plt.fill_between(x, y, color=sns.color_palette()[5], alpha=0.3)
+plt.plot(np.ones(10) * projData['平均年龄'].mean(), np.linspace(*ylim, 10), 'k--')
+plt.ylim(ylim)
+plt.xlim(xlim)
+plt.title('不同群类别平均年龄参数正态分布')
+plt.xlabel('年龄/岁')
+plt.savefig('report/figure/task3q3-norm.png', dpi=300)
+plt.clf()
+
 with open('report/meta/task3std.log', 'w', encoding='utf8') as resFile:
     task5std = projData.groupby('群类别')['平均年龄'].std()
     print(task5std, file=resFile)
@@ -196,7 +225,6 @@ for c in choices:
     weightfs = list()
     gwfs = list()
     for t in range(10):
-        org_sample = projData
         rand_sample = projData.sample(frac=0.1)
         group_sample = projData.groupby('主题').apply(
             lambda d: d.sample(frac=0.1))
@@ -226,9 +254,9 @@ res.transpose().plot(kind='bar')
 plt.savefig('report/figure/task6-fvar.png', dpi=300)
 plt.clf()
 
+res = pd.DataFrame(dtm)
 with open('report/meta/task6-fmean.tex', 'w', encoding='utf8') as resFile:
-    print(pd.DataFrame(dtm).to_latex(), file=resFile)
-
+    print(res.to_latex(), file=resFile)
 # task 7
 
 sigmoid_x = np.linspace(-10, 10, 100)
