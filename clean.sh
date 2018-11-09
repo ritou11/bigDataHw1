@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
-rm report/*.log
-rm report/figure/*.png
 cd report/
+rm meta/*
+rm figure/*.png
 latexmk -C report.tex

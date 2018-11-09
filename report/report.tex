@@ -51,7 +51,7 @@
     \end{figure}
 
     可以看到，其相较于正态分布，曲线腰部更瘦，且有明显偏移。为了对该分布的正态性进行验证，可以利用课堂上提到的Skew and Kurtosis Test方法，即偏度-峰度检验。该检验的原假设为“被试分布具有正态性”，备择假设为“被试分布不具备正态性”。得到计算结果如\cref{task3q1log}所示。
-    \lstinputlisting[label=task3q1log]{task3q1.log}
+    \lstinputlisting[label=task3q1log]{meta/task3q1.log}
 
     可见，在选取$\alpha=0.05$作为标准时，$pValue<\alpha=0.05$，即有充分把握拒绝原假设，因此该分布不满足正态性。
 
@@ -59,10 +59,10 @@
     \paragraph{问题描述} In Col[7], there are 5 components divided by category labels. We denote the data in Col[7] with category i (where i = 1,...,5) as Col[7| categoty=i]. Test the normality of each components and test the homogeneity of variances.
 
     分组后进行同样的检验操作，得到结果如\cref{task3q2log}。可以直接看出，类别编号1，4，5组的平均年龄不满足正态性，类别编号2、3的组可以认为满足正态性。
-    \lstinputlisting[label=task3q2log]{task3q2.log}
+    \lstinputlisting[label=task3q2log]{meta/task3q2.log}
 
     对于方差齐的检验，应使用课程中提及的2倍标准差判据。对各组标准差进行计算，并取其中最大值、最小值进行比较，结果如\cref{task3std}。可见，同学会的平均年龄标准差是最大的，业主的平均年龄标准差是最小的。这个结论在\cref{fig:task2-boxplot}的箱图中也可以看出。另一方面，从社会经验上看，同学会存在于各个年龄段，而业主则主要是实现了积累的中老年，符合此处的结论。
-    \lstinputlisting[label=task3std]{task3std.log}
+    \lstinputlisting[label=task3std]{meta/task3std.log}
 
     对平均年龄而言，标准差最大值最小值之比，约为2（仅仅略大），此时我们可以认为该分部满足方差齐的条件。
 
@@ -74,7 +74,7 @@
       \centering
       \caption{平均年龄-群类别ANOVA}
       \label{tbl:task3q3}
-      \include{task3q3}
+      \include{meta/task3q3}
     \end{table}
     TODO
 
@@ -91,10 +91,10 @@
     \end{figure}
 
     针对以上三个特征的正态性进行检验，同样使用偏度-峰度法，得到结果如\cref{task4norm}。结果显示三组均不满足正态性。另外，结果也展示了方差齐检验的结果。无回应比例满足方差齐的条件，图片比例不满足方差齐的条件，而性别比的校验值略大于2，一定程度上可以近似认为满足方差齐。
-    \lstinputlisting[label=task4norm]{task4norm.log}
+    \lstinputlisting[label=task4norm]{meta/task4norm.log}
 
     对这三组数据进行对数变换，即$y=\log(x)$。注意到，$x=0$为奇异点，因此在实际应用中需要考虑零值的处理方式。首先，对所选数据的零值数量进行统计，得到如\cref{task4zerocount}的结果。
-    \lstinputlisting[label=task4zerocount]{task4zerocount.log}
+    \lstinputlisting[label=task4zerocount]{meta/task4zerocount.log}
     其中，性别比、无回应比的零值较少，而图片比例的零值较多。对于零值，我们有两种处理方法。
     \paragraph{方案1} 给所有值加上一个小量，如$10^{-6}$，然后进行对数变换。由于该调整量很小，因此不影响整体的分布情况。
 
@@ -106,12 +106,12 @@
       \label{fig:task4loggnn}
     \end{figure}
 
-    \lstinputlisting[label=task4lognorm]{task4lognorm.log}
+    \lstinputlisting[label=task4lognorm]{meta/task4lognorm.log}
     \paragraph{方案2} 直接忽略零值，求取其他数值的对数变换。如果零值较少，可以认为其为毛刺点而将其忽略。
 
     如果采用方案2，求得的概率密度函数如\cref{fig:task4loggnn}所示，相应的正态性检验结果如\cref{task4lognorm0}所示。可见，性别比、无回应比例的对数变换均不满足正态性。其中，图片比例并不适宜采用本方案，但即便采用，依然没有正态性。无回应比例在此处满足方差齐，而性别比则不满足方差齐。
 
-    \lstinputlisting[label=task4lognorm0]{task4lognorm0.log}
+    \lstinputlisting[label=task4lognorm0]{meta/task4lognorm0.log}
 
     从以上统计结果及图像中均可以看到，性别比的经验概率密度分布比较接近正态，图片比例去零取对数后的经验概率密度分布比较接近正态。然而，这两种情况均未通过正态性检验，我们并没有充分的把握说明其正态性，且图片比例数据并不适宜去零处理。
     \section{任务5} % (fold)
@@ -134,7 +134,7 @@
     \paragraph{问题描述} Do the one-way ANOVA on the 3 columns you choose. Do these feature columns vary significantly? Visualize the results.
 
     采用非参数的Kruskal-Wallis检验法，对三种特征进行检验，结果如\cref{task5kwtest}所示。可见，检验均拒绝了原假设，因此我们有充分的把握，说明对于这三种特征而言，五种类别是有显著区别的。
-    \lstinputlisting[label=task5kwtest]{task5kwtest.log}
+    \lstinputlisting[label=task5kwtest]{meta/task5kwtest.log}
 
     从\cref{fig:violin3}中可以看出，对于每一组特征，五个类别的分布函数不尽相同，因此也可以直观看出他们有显著区别。
     \begin{figure}
@@ -160,13 +160,13 @@
       \centering
       \caption{不同抽样策略下不同特征ANOVA-F值平均值}
       \label{tbl:task6-fmean}
-      \include{task6-fmean}
+      \include{meta/task6-fmean}
     \end{table}
     \begin{table}[htbp]
       \centering
       \caption{不同抽样策略下不同特征ANOVA-F值方差}
       \label{tbl:task6-fvar}
-      \include{task6-fvar}
+      \include{meta/task6-fvar}
     \end{table}
 
     为了更直观地看出不同抽样方法的稳定性，可以将F值方差结果分别在不同特征上标准化，并作出柱状图，如\cref{fig:task6-fvar}所示。注意，由于经过了标准化，因此图中不同特征之间的柱无可比性，而实际上比较不同特征的F值方差也是没有意义的。从图中可以看到，在平均年龄上，随机抽样的稳定性表现较好，有更低的方差。但在其他的特征上，随机抽样未必会一直有良好的稳定性。例如，性别比特征中，分层权重抽样表现较好。
@@ -218,10 +218,10 @@
     应用极大似然法，使用梯度下降求解问题$\min^{\theta} l(\theta)$即可求得一组参数$\theta^*$。
 
     对于本问题，任选两个类别的群，应用Logistic Regression及SVM(Support Vector Machine)算法进行预测。SVM算法在多维分类问题上往往有出色的表现，近年来被广泛应用，此处作为对比。其中训练样本比例取为0.9，测试样本比例选为0.1。预测准确率统计如\cref{task7-two}所示。根据结果可见，在不同的类别之间，Logistics回归算法与SVM算法的表现均有所变化，且变化趋势相近，范围大致在75\%-95\%之间变化。同时，不同的类别组合下，Logistics回归与SVM各有优劣，总体上SVM算法更加稳定。
-    \lstinputlisting[label=task7-two]{task7-two.log}
+    \lstinputlisting[label=task7-two]{meta/task7-two.log}
 
     尝试同时辨别5种类别的群，采用同样的样本划分方式，预测准确率如\cref{task7-multi}所示。此处可见，SVM算法在多类别划分上更有优势。
-    \lstinputlisting[label=task7-multi]{task7-multi.log}
+    \lstinputlisting[label=task7-multi]{meta/task7-multi.log}
     \label{applastpage}
     \newpage
     \bibliography{report}

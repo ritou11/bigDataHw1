@@ -66,20 +66,20 @@ def doThreeTest(group, choice):
     return resStr, (ksD, ksP), (ntN, ntP), (spW, spP)
 
 
-with open('report/task3q1.log', 'w', encoding='utf8') as resFile:
+with open('report/meta/task3q1.log', 'w', encoding='utf8') as resFile:
     print(doThreeTest(projData, '平均年龄')[0], file=resFile)
 
-with open('report/task3q2.log', 'w', encoding='utf8') as resFile:
+with open('report/meta/task3q2.log', 'w', encoding='utf8') as resFile:
     for name, group in projData.groupby('群类别'):
         print('Group %s' % name, file=resFile)
         print(doThreeTest(group, '平均年龄')[0], file=resFile)
 
-with open('report/task3q3.tex', 'w', encoding='utf8') as resFile:
+with open('report/meta/task3q3.tex', 'w', encoding='utf8') as resFile:
     lm = ols('平均年龄 ~ C(群类别)', data=projData).fit()
     reportTable = sm.stats.anova_lm(lm, typ=1)
     print(reportTable.to_latex(), file=resFile)
 
-with open('report/task3std.log', 'w', encoding='utf8') as resFile:
+with open('report/meta/task3std.log', 'w', encoding='utf8') as resFile:
     task5std = projData.groupby('群类别')['平均年龄'].std()
     print(task5std, file=resFile)
     print('Max std: %.3f, type %d, %s' % (task5std.max(),
@@ -97,7 +97,7 @@ with open('report/task3std.log', 'w', encoding='utf8') as resFile:
 
 choices = ['性别比', '无回应比例', '图片比例']
 
-with open('report/task4norm.log', 'w', encoding='utf8') as resFile:
+with open('report/meta/task4norm.log', 'w', encoding='utf8') as resFile:
     N = len(choices)
     f, axs = plt.subplots(1, N, sharey=False, figsize=(12, 5))
     for i, c in enumerate(choices):
@@ -116,12 +116,12 @@ with open('report/task4norm.log', 'w', encoding='utf8') as resFile:
               ) / projData.groupby('主题')[c].std().min()),
               file=resFile)
 
-with open('report/task4zerocount.log', 'w', encoding='utf8') as resFile:
+with open('report/meta/task4zerocount.log', 'w', encoding='utf8') as resFile:
     print('Zero count', file=resFile)
     print((projData[choices] == 0).sum(), file=resFile)
 
-with open('report/task4lognorm0.log', 'w', encoding='utf8') as res0File:
-    with open('report/task4lognorm.log', 'w', encoding='utf8') as resFile:
+with open('report/meta/task4lognorm0.log', 'w', encoding='utf8') as res0File:
+    with open('report/meta/task4lognorm.log', 'w', encoding='utf8') as resFile:
         f, axs = plt.subplots(2, N, sharey=False, figsize=(14, 10))
         for i, c in enumerate(choices):
             # log pdf plot
@@ -157,7 +157,7 @@ with open('report/task4lognorm0.log', 'w', encoding='utf8') as res0File:
                   file=res0File)
 
 # task 5
-with open('report/task5kwtest.log', 'w', encoding='utf8') as resFile:
+with open('report/meta/task5kwtest.log', 'w', encoding='utf8') as resFile:
     for c in choices:
         gp = projData.groupby('主题')[c]
         gpl = list()
@@ -219,14 +219,14 @@ for c in choices:
     dtm[c] = res.mean()
 
 res = pd.DataFrame(dt)
-with open('report/task6-fvar.tex', 'w', encoding='utf8') as resFile:
+with open('report/meta/task6-fvar.tex', 'w', encoding='utf8') as resFile:
     print(res.to_latex(), file=resFile)
 res = res.apply(lambda d: (d - d.mean()) / d.std())
 res.transpose().plot(kind='bar')
 plt.savefig('report/figure/task6-fvar.png', dpi=300)
 plt.clf()
 
-with open('report/task6-fmean.tex', 'w', encoding='utf8') as resFile:
+with open('report/meta/task6-fmean.tex', 'w', encoding='utf8') as resFile:
     print(pd.DataFrame(dtm).to_latex(), file=resFile)
 
 # task 7
@@ -258,11 +258,11 @@ X_train, X_test, y_train, y_test = train_test_split(lrdata[features], lrdata['�
 clf = LogisticRegression().fit(X_train, y_train)
 y_pred = clf.predict(X_test)
 clfsvm = svm.SVC(C=1.5).fit(X_train, y_train)
-with open('report/task7-multi.log', 'w', encoding='utf8') as resFile:
+with open('report/meta/task7-multi.log', 'w', encoding='utf8') as resFile:
     print('Logistic Regression accur. = %.2f%%' % (100 * np.mean(y_pred == y_test)), file=resFile)
     print('Support Vector Machine accur. = %.2f%%' % (clfsvm.score(X_test, y_test) * 100), file=resFile)
 
-with open('report/task7-two.log', 'w', encoding='utf8') as resFile:
+with open('report/meta/task7-two.log', 'w', encoding='utf8') as resFile:
     for fs in itertools.combinations(classes, 2):
         lrdata = get_groups(normData.groupby('主题'), fs)
         X_train, X_test, y_train, y_test = train_test_split(lrdata[features], lrdata['群类别'], test_size=testRatio)
