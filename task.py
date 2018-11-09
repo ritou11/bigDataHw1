@@ -145,9 +145,10 @@ with open('report/meta/task4norm.log', 'w', encoding='utf8') as resFile:
               ) / projData.groupby('主题')[c].std().min()),
               file=resFile)
 
-with open('report/meta/task4zerocount.log', 'w', encoding='utf8') as resFile:
-    print('Zero count', file=resFile)
-    print((projData[choices] == 0).sum(), file=resFile)
+with open('report/meta/task4zerocount.tex', 'w', encoding='utf8') as resFile:
+    zeros = (projData[choices] == 0).sum()
+    zeros.name = '零值数量'
+    print(zeros.to_latex(), file=resFile)
 
 with open('report/meta/task4lognorm0.log', 'w', encoding='utf8') as res0File:
     with open('report/meta/task4lognorm.log', 'w', encoding='utf8') as resFile:
