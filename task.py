@@ -40,7 +40,7 @@ if not category['数量'].equals(orgData['群类别'].value_counts().sort_index(
 plt.figure()
 sns.boxplot(x=projData['主题'], y=projData['平均年龄'])
 plt.title('平均年龄在主题上分布箱图')
-plt.savefig('report/figure/task2-boxplot.png', dpi=300)
+plt.savefig('report/meta/fig/task2-boxplot.png', dpi=300)
 plt.clf()
 
 # task 3
@@ -53,7 +53,7 @@ def plot_pdf(choice):
 
 
 plot_pdf('平均年龄')
-plt.savefig('report/figure/task3-pdf.png', dpi=300)
+plt.savefig('report/meta/fig/task3-pdf.png', dpi=300)
 
 
 def doThreeTest(group, choice):
@@ -87,7 +87,7 @@ sns.kdeplot(data=projData['平均年龄'], shade=True, label='总体')
 plt.title('不同群类别平均年龄经验概率分布')
 plt.xlabel('年龄/岁')
 plt.tight_layout(h_pad=2)
-plt.savefig('report/figure/task3q3.png', dpi=300)
+plt.savefig('report/meta/fig/task3q3.png', dpi=300)
 ylim = plt.ylim()
 xlim = plt.xlim()
 plt.clf()
@@ -105,7 +105,7 @@ plt.ylim(ylim)
 plt.xlim(xlim)
 plt.title('不同群类别平均年龄参数正态分布')
 plt.xlabel('年龄/岁')
-plt.savefig('report/figure/task3q3-norm.png', dpi=300)
+plt.savefig('report/meta/fig/task3q3-norm.png', dpi=300)
 plt.clf()
 
 with open('report/meta/task3std.log', 'w', encoding='utf8') as resFile:
@@ -137,7 +137,7 @@ with open('report/meta/task4norm.log', 'w', encoding='utf8') as resFile:
         resStr = doThreeTest(projData, c)[0]
         print('%s %s' % (c, resStr), file=resFile)
     plt.tight_layout(h_pad=2)
-    plt.savefig('report/figure/task4-pdf.png', dpi=300)
+    plt.savefig('report/meta/fig/task4-pdf.png', dpi=300)
     plt.clf()
     for c in choices:
         print('%s MaxStd / MinStd = %.2f' %
@@ -172,7 +172,7 @@ with open('report/meta/task4lognorm0.log', 'w', encoding='utf8') as res0File:
             print('%s Skew and Kurtosis Test: N=%s, P=%s' %
                   (c, ntN, ntP), file=res0File)
         plt.tight_layout(h_pad=2)
-        plt.savefig('report/figure/task4-logpdf.png', dpi=300)
+        plt.savefig('report/meta/fig/task4-logpdf.png', dpi=300)
         plt.clf()
         for c in choices:
             lcdt = projData.groupby('主题')[c].apply(
@@ -202,7 +202,7 @@ for i, c in enumerate(choices):
     sns.violinplot(x='主题', y=c, data=projData, ax=axs[i])
     axs[i].set_title('%s在主题上分布小提琴图' % c)
 plt.tight_layout(h_pad=2)
-plt.savefig('report/figure/task5-boxplot.png', dpi=300)
+plt.savefig('report/meta/fig/task5-boxplot.png', dpi=300)
 plt.clf()
 
 # task 6
@@ -226,12 +226,12 @@ for c in choices:
     weightfs = list()
     gwfs = list()
     for t in range(10):
-        rand_sample = projData.sample(frac=0.1)
+        rand_sample = projData.sample(frac=0.1, random_state=t)
         group_sample = projData.groupby('主题').apply(
-            lambda d: d.sample(frac=0.1))
-        weight_sample = projData.sample(frac=0.1, weights='群人数')
+            lambda d: d.sample(frac=0.1, random_state=t))
+        weight_sample = projData.sample(frac=0.1, weights='群人数', random_state=t)
         gw_sample = projData.groupby('主题').apply(
-            lambda d: d.sample(frac=0.1, weights='群人数'))
+            lambda d: d.sample(frac=0.1, weights='群人数', random_state=t))
         rand_f, rand_p = ftest_theme(rand_sample, c)
         group_f, group_p = ftest_theme(group_sample, c)
         weight_f, weight_p = ftest_theme(weight_sample, c)
@@ -251,8 +251,8 @@ res = pd.DataFrame(dt)
 with open('report/meta/task6-fvar.tex', 'w', encoding='utf8') as resFile:
     print(res.to_latex(), file=resFile)
 res = res.apply(lambda d: (d - d.mean()) / d.std())
-res.transpose().plot(kind='bar')
-plt.savefig('report/figure/task6-fvar.png', dpi=300)
+res.transpose().plot(kind='bar', rot=0)
+plt.savefig('report/meta/fig/task6-fvar.png', dpi=300)
 plt.clf()
 
 res = pd.DataFrame(dtm)
@@ -266,7 +266,7 @@ sns.lineplot(sigmoid_x, sigmoid_y)
 plt.xlabel('z')
 plt.ylabel('Sigmoid(z)')
 plt.title('Sigmoid函数图像')
-plt.savefig('report/figure/task7-sigmoid.png', dpi=300)
+plt.savefig('report/meta/fig/task7-sigmoid.png', dpi=300)
 plt.clf()
 
 def get_groups(gpdata, groups):
@@ -283,7 +283,7 @@ norm_cols = ['性别比', '群人数', '消息数', '稠密度', '年龄差', '�
 normData = projData.apply(lambda d: (d - d.mean()) / d.std() if d.name in norm_cols else d)
 
 lrdata = get_groups(normData.groupby('主题'), classes)
-X_train, X_test, y_train, y_test = train_test_split(lrdata[features], lrdata['群类别'], test_size=testRatio)
+X_train, X_test, y_train, y_test = train_test_split(lrdata[features], lrdata['群类别'], test_size=testRatio, random_state=2333)
 clf = LogisticRegression().fit(X_train, y_train)
 y_pred = clf.predict(X_test)
 clfsvm = svm.SVC(C=1.5).fit(X_train, y_train)
@@ -294,7 +294,7 @@ with open('report/meta/task7-multi.log', 'w', encoding='utf8') as resFile:
 with open('report/meta/task7-two.log', 'w', encoding='utf8') as resFile:
     for fs in itertools.combinations(classes, 2):
         lrdata = get_groups(normData.groupby('主题'), fs)
-        X_train, X_test, y_train, y_test = train_test_split(lrdata[features], lrdata['群类别'], test_size=testRatio)
+        X_train, X_test, y_train, y_test = train_test_split(lrdata[features], lrdata['群类别'], test_size=testRatio, random_state=2333)
         clf = LogisticRegression().fit(X_train, y_train)
         clfsvm = svm.SVC(C=1.5).fit(X_train, y_train)
         print(fs, file=resFile)

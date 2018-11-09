@@ -1,14 +1,15 @@
 \documentclass[a4paper,12pt]{article}
-\usepackage[notoc,noabs]{HaotianReport}
+\usepackage[noabs]{HaotianReport}
 
 \title{第一次作业：QQ群组数据统计分析}
 \author{刘昊天}
 \authorinfo{电博181班, 2018310648}
 \runninghead{大数据分析(B)课程报告}
-\studytime{2018年10月}
+\studytime{2018年10月-11月}
 
 \renewcommand{\lstlistingname}{记录}
 \crefname{listing}{记录}{记录}\Crefname{listing}{记录}{记录}
+\graphicspath{{./}{./figure/}{./meta/fig/}}
 
 \begin{document}
     \maketitle
@@ -53,7 +54,7 @@
         \label{fig:task3-pdf}
     \end{figure}
 
-    可以看到，其相较于正态分布，曲线腰部更瘦，且有明显偏移。为了对该分布的正态性进行验证，可以利用课堂上提到的Skew and Kurtosis Test方法，即偏度-峰度检验。该检验的原假设为“被试分布具有正态性”，备择假设为“被试分布不具备正态性”。得到计算结果如\cref{task3q1log}所示。
+    可以看到，其相较于正态分布，曲线腰部更瘦，且有明显偏移。为了对该分布的正态性进行验证，可以利用课堂上提到的Skew and Kurtosis Test方法\cite{hypotest}，即偏度-峰度检验。该检验的原假设为“被试分布具有正态性”，备择假设为“被试分布不具备正态性”\cite{zhengtai}。得到计算结果如\cref{task3q1log}所示。
     \lstinputlisting[label={task3q1log},caption={平均年龄总体正态性检验结果}]{meta/task3q1.log}
 
     可见，在选取$\alpha=0.05$作为标准时，$pValue<\alpha=0.05$，即有充分把握拒绝原假设，因此该分布不满足正态性。
@@ -64,7 +65,7 @@
     分组后进行同样的检验操作，得到结果如\cref{task3q2log}。可以直接看出，类别编号1，4，5组的平均年龄不满足正态性，类别编号2、3的组可以认为满足正态性。
     \lstinputlisting[label=task3q2log,caption={平均年龄分组正态性检验结果}]{meta/task3q2.log}
 
-    对于方差齐的检验，应使用课程中提及的2倍标准差判据。对各组标准差进行计算，并取其中最大值、最小值进行比较，结果如\cref{task3std}。可见，同学会的平均年龄标准差是最大的，业主的平均年龄标准差是最小的。这个结论在\cref{fig:task2-boxplot}的箱图中也可以看出。另一方面，从社会经验上看，同学会存在于各个年龄段，而业主则主要是实现了积累的中老年，符合此处的结论。
+    对于方差齐的检验，应使用课程中提及的2倍标准差判据\cite{anova}。对各组标准差进行计算，并取其中最大值、最小值进行比较，结果如\cref{task3std}。可见，同学会的平均年龄标准差是最大的，业主的平均年龄标准差是最小的。这个结论在\cref{fig:task2-boxplot}的箱图中也可以看出。另一方面，从社会经验上看，同学会存在于各个年龄段，而业主则主要是实现了积累的中老年，符合此处的结论。
     \lstinputlisting[label=task3std,caption={平均年龄标准差计算结果}]{meta/task3std.log}
 
     对平均年龄而言，标准差最大值最小值之比，约为2（仅仅略大），此时我们可以认为该分部满足方差齐的条件。
@@ -147,8 +148,7 @@
       \item 使用非参数Kruskal-Wallis H检验。
     \end{enumerate}
 
-    H检验不需要各样本总体为正态分布，常被用于检验多个总体的分布是否存在显著差异。其原假设是: 多个独立样本来自的多个总体的分布无显著差异，备择假设则是多个总体的分布有显著差异。多独立样本 Kruskal-Wallis 检验的基本思想是:首先，将多组样本数混合并按升序 排序，求出各变量值的秩;然后，考察各组秩的均值是否存在显著差异。 如果各组秩的均值不存在显著差异， 则认为多组数据充分混合，数值相差不大，可以认为多个总体的分布无显著差异;反之，如果各组秩的均值存 在显著差异，则是多组数据无法混合，有些组的数值普遍偏大，有些组的数值普遍偏小，可认为多个总体的分 布存在显著差异，至少有一个样本不同于其他样本。[TODO ref]
-
+    H检验不需要各样本总体为正态分布，常被用于检验多个总体的分布是否存在显著差异。其原假设是: 多个独立样本来自的多个总体的分布无显著差异，备择假设则是多个总体的分布有显著差异。多独立样本 Kruskal-Wallis 检验的基本思想是:首先，将多组样本数混合并按升序 排序，求出各变量值的秩;然后，考察各组秩的均值是否存在显著差异。 如果各组秩的均值不存在显著差异， 则认为多组数据充分混合，数值相差不大，可以认为多个总体的分布无显著差异;反之，如果各组秩的均值存 在显著差异，则是多组数据无法混合，有些组的数值普遍偏大，有些组的数值普遍偏小，可认为多个总体的分 布存在显著差异，至少有一个样本不同于其他样本。\cite{张林泉2014多独立样本}
     K-W统计量可表达为\cref{eq:kw}，随后可用卡方分布获得置信概率。
     \begin{equation}
       \label{eq:kw}
@@ -194,7 +194,7 @@
       \include{meta/task6-fvar}
     \end{table}
 
-    为了更直观地看出不同抽样方法的稳定性，可以将F值方差结果分别在不同特征上标准化，并作出柱状图，如\cref{fig:task6-fvar}所示。注意，由于经过了标准化，因此图中不同特征之间的柱无可比性，而实际上比较不同特征的F值方差也是没有意义的。从图中可以看到，在平均年龄上，随机抽样的稳定性表现较好，有更低的方差。但在其他的特征上，随机抽样未必会一直有良好的稳定性。例如，性别比特征中，分层权重抽样表现较好。
+    为了更直观地看出不同抽样方法的稳定性，可以将F值方差结果分别在不同特征上标准化，并作出柱状图，如\cref{fig:task6-fvar}所示，柱越靠下，代表方差越小，效果越好。注意，由于经过了标准化，因此图中不同特征之间的柱无可比性，而实际上比较不同特征的F值方差也是没有意义的。从图中可以看到，在平均年龄上，随机抽样的稳定性表现较好，有更低的方差。但在其他的特征上，随机抽样未必会一直有良好的稳定性。例如，无回应比例特征中，分层权重抽样表现较好。
 
     \begin{figure}[htbp]
       \centering
@@ -207,7 +207,7 @@
 
     \section{任务7} % (fold)
     \paragraph{问题描述} Choose any two categories, and classify them by logistical regression, or you can try multi-label classification on all categories.
-    所谓Logistics Regression，是指一种基于Logistics函数的广义线性回归。Logistics函数又称Sigmoid函数，表达式如\cref{eq:sigmoid}所示。【TODO：ref】
+    所谓Logistics Regression，是指一种基于Logistics函数的广义线性回归。Logistics函数又称Sigmoid函数，表达式如\cref{eq:sigmoid}所示。\cite{施朝健2005logistic}
     \begin{equation}
       \label{eq:sigmoid}
       \sigma(z) = \frac{1}{1+e^{-z}}
@@ -251,8 +251,8 @@
     \lstinputlisting[label=task7-multi,caption={Logistics回归对五组特征的分类结果}]{meta/task7-multi.log}
     \label{applastpage}
     \newpage
+    \bibliographystyle{ieeetr}
     \bibliography{report}
-    \bibliographystyle{unsrt}
 \iffalse
 \begin{itemize}[noitemsep,topsep=0pt]
 %no white space
