@@ -69,32 +69,25 @@
     \subsection{问题3}
     \paragraph{问题描述} Do the one-way ANOVA test for Col[7] with categories in Col[2]. Write down your conclusion, supporting statistics, and visualize your data which inspire the process.
 
-    利用F检验计算ANOVA，得到结果如\cref{task3q3log}所示。
-    \lstinputlisting[label=task3q3log]{task3q3.log}
+    利用F检验计算ANOVA，得到结果如\cref{tbl:task3q3}所示。注意到，$PR<\alpha=0.05$，因此有充分把握拒绝原假设。故结论是，不同主题的群之间，平均年龄的分布差异显著。
+    \begin{table}
+      \centering
+      \caption{平均年龄-群类别ANOVA}
+      \label{tbl:task3q3}
+      \include{task3q3}
+    \end{table}
     TODO
 
     \section{任务4} % (fold)
     \paragraph{问题描述} Choose another 3 columns, draw the empirical pdf of each feature columns and test which column follows these assumptions in question 1? How about their corresponding log transformation?
 
-    选取性别比、无回应比例以及图片比例三组特征，分别给出经验概率密度函数图像，如\cref{fig:gender,fig:noresponse,fig:nightchat}所示。
+    选取性别比、无回应比例以及图片比例三组特征，分别给出经验概率密度函数图像，如\cref{fig:gnn}所示。
 
     \begin{figure}[htbp]
         \centering
-        \includegraphics[width=0.95\textwidth]{task4-性别比-pdf}
-        \caption{性别比经验概率密度函数}
-        \label{fig:gender}
-    \end{figure}
-    \begin{figure}[htbp]
-        \centering
-        \includegraphics[width=0.95\textwidth]{task4-无回应比例-pdf}
-        \caption{无回应比例经验概率密度函数}
-        \label{fig:noresponse}
-    \end{figure}
-    \begin{figure}[htbp]
-        \centering
-        \includegraphics[width=0.95\textwidth]{task4-图片比例-pdf}
-        \caption{图片比例经验概率密度函数}
-        \label{fig:nightchat}
+        \includegraphics[width=\textwidth]{task4-pdf}
+        \caption{三组特征经验概率密度函数}
+        \label{fig:gnn}
     \end{figure}
 
     针对以上三个特征的正态性进行检验，同样使用偏度-峰度法，得到结果如\cref{task4norm}。结果显示三组均不满足正态性。另外，结果也展示了方差齐检验的结果。无回应比例满足方差齐的条件，图片比例不满足方差齐的条件，而性别比的校验值略大于2，一定程度上可以近似认为满足方差齐。
@@ -105,41 +98,19 @@
     其中，性别比、无回应比的零值较少，而图片比例的零值较多。对于零值，我们有两种处理方法。
     \paragraph{方案1} 给所有值加上一个小量，如$10^{-6}$，然后进行对数变换。由于该调整量很小，因此不影响整体的分布情况。
 
-    如果采用方案1，求得的概率密度函数如\cref{fig:task4genderlog,fig:task4noreplylog,fig:task4piclog}所示，相应的正态性检验结果如\cref{task4lognorm}所示，可见，三组数据的对数变换均不满足正态性。图片比例的对数变换满足方差齐，而其他两个特征不满足方差齐。
+    如果采用方案1，求得的概率密度函数如\cref{fig:task4loggnn}所示，相应的正态性检验结果如\cref{task4lognorm}所示，可见，三组数据的对数变换均不满足正态性。图片比例的对数变换满足方差齐，而其他两个特征不满足方差齐。
+
     \begin{figure}
-      \includegraphics{task4-性别比-logpdf}
-      \caption{性别比对数变换概率密度函数}
-      \label{fig:task4genderlog}
+      \includegraphics[width=\textwidth]{task4-logpdf}
+      \caption{三组特征对数变换概率密度函数}
+      \label{fig:task4loggnn}
     \end{figure}
-    \begin{figure}
-      \includegraphics{task4-无回应比例-logpdf}
-      \caption{无回应比例对数变换概率密度函数}
-      \label{fig:task4noreplylog}
-    \end{figure}
-    \begin{figure}
-      \includegraphics{task4-图片比例-logpdf}
-      \caption{图片比例对数变换概率密度函数}
-      \label{fig:task4piclog}
-    \end{figure}
+
     \lstinputlisting[label=task4lognorm]{task4lognorm.log}
     \paragraph{方案2} 直接忽略零值，求取其他数值的对数变换。如果零值较少，可以认为其为毛刺点而将其忽略。
 
-    如果采用方案2，求得的概率密度函数如\cref{fig:task4gender0log,fig:task4noreply0log,fig:task4pic0log}所示，相应的正态性检验结果如\cref{task4lognorm0}所示。可见，性别比、无回应比例的对数变换均不满足正态性。其中，图片比例并不适宜采用本方案，但即便采用，依然没有正态性。无回应比例在此处满足方差齐，而性别比则不满足方差齐。
-    \begin{figure}
-      \includegraphics{task4-性别比-0logpdf}
-      \caption{性别比去零对数变换概率密度函数}
-      \label{fig:task4gender0log}
-    \end{figure}
-    \begin{figure}
-      \includegraphics{task4-无回应比例-0logpdf}
-      \caption{无回应比例去零对数变换概率密度函数}
-      \label{fig:task4noreply0log}
-    \end{figure}
-    \begin{figure}
-      \includegraphics{task4-图片比例-0logpdf}
-      \caption{(无效)图片比例去零对数变换概率密度函数}
-      \label{fig:task4pic0log}
-    \end{figure}
+    如果采用方案2，求得的概率密度函数如\cref{fig:task4loggnn}所示，相应的正态性检验结果如\cref{task4lognorm0}所示。可见，性别比、无回应比例的对数变换均不满足正态性。其中，图片比例并不适宜采用本方案，但即便采用，依然没有正态性。无回应比例在此处满足方差齐，而性别比则不满足方差齐。
+
     \lstinputlisting[label=task4lognorm0]{task4lognorm0.log}
 
     从以上统计结果及图像中均可以看到，性别比的经验概率密度分布比较接近正态，图片比例去零取对数后的经验概率密度分布比较接近正态。然而，这两种情况均未通过正态性检验，我们并没有充分的把握说明其正态性，且图片比例数据并不适宜去零处理。
@@ -165,10 +136,49 @@
     采用非参数的Kruskal-Wallis检验法，对三种特征进行检验，结果如\cref{task5kwtest}所示。可见，检验均拒绝了原假设，因此我们有充分的把握，说明对于这三种特征而言，五种类别是有显著区别的。
     \lstinputlisting[label=task5kwtest]{task5kwtest.log}
 
-    TODO：visualize
+    从\cref{fig:violin3}中可以看出，对于每一组特征，五个类别的分布函数不尽相同，因此也可以直观看出他们有显著区别。
+    \begin{figure}
+      \includegraphics[width=\textwidth]{task5-boxplot}
+      \caption{三组特征小提琴图}
+      \label{fig:violin3}
+    \end{figure}
 
     \section{任务6} % (fold)
     \paragraph{问题描述} Redo the ANOVA test in question 3 c) by sampling 10\% data (i.e. around 200 groups). Repeat 10 times and compute the mean and standard deviation of the supporting statistics (F value). Compare at least two sampling strategies. Which sampling method is more stable? How are the results compared to the results without sampling? Why?
+
+    给出四种抽样策略：
+    \begin{enumerate}
+      \item 随机抽样(rand)：产生一组随机序号，以此选出10\%的样本。
+      \item 分层抽样(group)：依据原样本中的类别，在各个类别中随机抽样，抽样数为原类别样本数的10\%。
+      \item 基于权重的抽样(weight)：以每个群的总人数作为权重，将各权重之和归一化后作为选中概率。这种抽样方法的目的，是为了尽量保存群人数多的群，我们认为这一类群在体现比例特征时更有代表性。
+      \item 分层权重抽样(group-weight)：即在依据类别分层的同时，也依据群人数权重决定选中概率。
+    \end{enumerate}
+
+    利用以上4种抽样策略，重做对平均年龄的ANOVA。为了进一步验证抽样策略的有效性，此处还对前文所选的另外三个特征重做ANOVA。分别计算10次得到一组F值，按照题目要求计算均值和方差，结果分别如\cref{tbl:task6-fmean, tbl:task6-fvar}所示。
+
+    \begin{table}[htbp]
+      \centering
+      \caption{不同抽样策略下不同特征ANOVA-F值平均值}
+      \label{tbl:task6-fmean}
+      \include{task6-fmean}
+    \end{table}
+    \begin{table}[htbp]
+      \centering
+      \caption{不同抽样策略下不同特征ANOVA-F值方差}
+      \label{tbl:task6-fvar}
+      \include{task6-fvar}
+    \end{table}
+
+    为了更直观地看出不同抽样方法的稳定性，可以将F值方差结果分别在不同特征上标准化，并作出柱状图，如\cref{fig:task6-fvar}所示。注意，由于经过了标准化，因此图中不同特征之间的柱无可比性，而实际上比较不同特征的F值方差也是没有意义的。从图中可以看到，在平均年龄上，随机抽样的稳定性表现较好，有更低的方差。但在其他的特征上，随机抽样未必会一直有良好的稳定性。例如，性别比特征中，分层权重抽样表现较好。
+
+    \begin{figure}[htbp]
+      \includegraphics{task6-fvar}
+      \caption{F值方差对比}
+      \label{fig:task6-fvar}
+    \end{figure}
+
+    TODO 和无抽样的对比
+
     \section{任务7} % (fold)
     \paragraph{问题描述} Choose any two categories, and classify them by logistical regression, or you can try multi-label classification on all categories.
     所谓Logistics Regression，是指一种基于Logistics函数的广义线性回归。Logistics函数又称Sigmoid函数，表达式如\cref{eq:sigmoid}所示。【TODO：ref】
@@ -207,11 +217,11 @@
 
     应用极大似然法，使用梯度下降求解问题$\min^{\theta} l(\theta)$即可求得一组参数$\theta^*$。
 
-    对于本问题，任选两个类别的群，应用Logistic Regression及SVM(Support Vector Machine)算法进行预测。SVM算法在多维分类问题上往往有出色的表现，近年来被广泛应用，此处作为对比。其中训练样本比例取为0.9，测试样本比例选为0.1。预测准确率统计如\cref{task6-two}所示。根据结果可见，在不同的类别之间，Logistics回归算法与SVM算法的表现均有所变化，且变化趋势相近，范围大致在75\%-95\%之间变化。同时，不同的类别组合下，Logistics回归与SVM各有优劣，总体上SVM算法更加稳定。
-    \lstinputlisting[label=task6-two]{task6-two.log}
+    对于本问题，任选两个类别的群，应用Logistic Regression及SVM(Support Vector Machine)算法进行预测。SVM算法在多维分类问题上往往有出色的表现，近年来被广泛应用，此处作为对比。其中训练样本比例取为0.9，测试样本比例选为0.1。预测准确率统计如\cref{task7-two}所示。根据结果可见，在不同的类别之间，Logistics回归算法与SVM算法的表现均有所变化，且变化趋势相近，范围大致在75\%-95\%之间变化。同时，不同的类别组合下，Logistics回归与SVM各有优劣，总体上SVM算法更加稳定。
+    \lstinputlisting[label=task7-two]{task7-two.log}
 
-    尝试同时辨别5种类别的群，采用同样的样本划分方式，预测准确率如\cref{task6-multi}所示。此处可见，SVM算法在多类别划分上更有优势。
-    \lstinputlisting[label=task6-multi]{task6-multi.log}
+    尝试同时辨别5种类别的群，采用同样的样本划分方式，预测准确率如\cref{task7-multi}所示。此处可见，SVM算法在多类别划分上更有优势。
+    \lstinputlisting[label=task7-multi]{task7-multi.log}
     \label{applastpage}
     \newpage
     \bibliography{report}

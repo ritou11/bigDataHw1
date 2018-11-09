@@ -9,11 +9,11 @@ Created on Sat Oct 20 10:04:28 2018
 import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set(color_codes=True)
+sns.set_style('ticks')
 sns.set_style({
     'font.family': '.PingFang SC',
     # 'font.family': 'STSong',
-    'axes.unicode_minus': False
-})
+    'axes.unicode_minus': False })
 import pandas as pd
 import numpy as np
 from scipy import stats
@@ -41,12 +41,12 @@ plt.figure()
 sns.boxplot(x=projData['主题'], y=projData['平均年龄'])
 plt.title('平均年龄在主题上分布箱图')
 plt.savefig('report/figure/task2-boxplot.png', dpi=300)
+plt.clf()
 
 # task 3
 
 
 def plot_pdf(choice):
-    plt.clf()
     sns.distplot(projData[choice])
     plt.title('%sPDF图' % choice)
     plt.xlabel('%s/岁' % choice)
@@ -74,10 +74,10 @@ with open('report/task3q2.log', 'w', encoding='utf8') as resFile:
         print('Group %s' % name, file=resFile)
         print(doThreeTest(group, '平均年龄')[0], file=resFile)
 
-with open('report/task3q3.log', 'w', encoding='utf8') as resFile:
+with open('report/task3q3.tex', 'w', encoding='utf8') as resFile:
     lm = ols('平均年龄 ~ C(群类别)', data=projData).fit()
     reportTable = sm.stats.anova_lm(lm, typ=1)
-    print(reportTable, file=resFile)
+    print(reportTable.to_latex(), file=resFile)
 
 with open('report/task3std.log', 'w', encoding='utf8') as resFile:
     task5std = projData.groupby('群类别')['平均年龄'].std()
@@ -98,14 +98,18 @@ with open('report/task3std.log', 'w', encoding='utf8') as resFile:
 choices = ['性别比', '无回应比例', '图片比例']
 
 with open('report/task4norm.log', 'w', encoding='utf8') as resFile:
-    for c in choices:
+    N = len(choices)
+    f, axs = plt.subplots(1, N, sharey=False, figsize=(12, 5))
+    for i, c in enumerate(choices):
         # pdf plot
-        # TODO: put them in subplots
-        plot_pdf(c)
-        plt.savefig('report/figure/task4-%s-pdf.png' % c, dpi=300)
+        sns.distplot(projData[c], ax=axs[i])
+        axs[i].set_title('%sPDF图' % c)
+        plt.xlabel('%s/岁' % c)
         resStr = doThreeTest(projData, c)[0]
         print('%s %s' % (c, resStr), file=resFile)
-        plt.clf()
+    plt.tight_layout(h_pad=2)
+    plt.savefig('report/figure/task4-pdf.png', dpi=300)
+    plt.clf()
     for c in choices:
         print('%s MaxStd / MinStd = %.2f' %
               (c, projData.groupby('主题')[c].std().max(
@@ -118,22 +122,17 @@ with open('report/task4zerocount.log', 'w', encoding='utf8') as resFile:
 
 with open('report/task4lognorm0.log', 'w', encoding='utf8') as res0File:
     with open('report/task4lognorm.log', 'w', encoding='utf8') as resFile:
-        for c in choices:
+        f, axs = plt.subplots(2, N, sharey=False, figsize=(14, 10))
+        for i, c in enumerate(choices):
             # log pdf plot
-            # TODO: put them in subplots
-            sns.distplot(np.log(1e-6 + projData[c]))
-            plt.title('%s log PDF图' % c)
-            plt.xlabel('%s/岁' % c)
-            plt.savefig('report/figure/task4-%s-logpdf.png' % c, dpi=300)
-            plt.clf()
+            sns.distplot(np.log(1e-6 + projData[c]), ax=axs[0][i])
+            axs[0][i].set_title('%s log PDF图' % c)
+            axs[0][i].set_xlabel('%s/岁' % c)
             # log without 0 pdf plot
-            # TODO: put them in subplots
             cdt = projData.loc[projData[c] != 0]
-            sns.distplot(np.log(cdt[c]))
-            plt.title('%s 去零 log PDF图' % c)
-            plt.xlabel('%s/岁' % c)
-            plt.savefig('report/figure/task4-%s-0logpdf.png' % c, dpi=300)
-            plt.clf()
+            sns.distplot(np.log(cdt[c]), ax=axs[1][i])
+            axs[1][i].set_title('%s 去零 log PDF图' % c)
+            axs[1][i].set_xlabel('%s/岁' % c)
             # log normal test
             ntN, ntP = stats.normaltest(np.log(1e-6 + projData[c]))
             print('%s Skew and Kurtosis Test: N=%s, P=%s' %
@@ -142,6 +141,9 @@ with open('report/task4lognorm0.log', 'w', encoding='utf8') as res0File:
             ntN, ntP = stats.normaltest(np.log(cdt[c]))
             print('%s Skew and Kurtosis Test: N=%s, P=%s' %
                   (c, ntN, ntP), file=res0File)
+        plt.tight_layout(h_pad=2)
+        plt.savefig('report/figure/task4-logpdf.png', dpi=300)
+        plt.clf()
         for c in choices:
             lcdt = projData.groupby('主题')[c].apply(
                 lambda d: np.log(d + 1e-6).std())
@@ -164,11 +166,14 @@ with open('report/task5kwtest.log', 'w', encoding='utf8') as resFile:
         kwS, kwP = stats.kruskal(*gpl)
         print('%s K-W Test: s=%s, p=%s' % (c, kwS, kwP), file=resFile)
 
-for c in choices:
-    sns.violinplot(x='主题', y=c, data=projData)
-    plt.title('%s在主题上分布小提琴图' % c)
-    plt.savefig('report/figure/task5-%s-boxplot.png' % c, dpi=300)
-    plt.clf()
+
+f, axs = plt.subplots(N, 1, sharey=False, figsize=(10, 7))
+for i, c in enumerate(choices):
+    sns.violinplot(x='主题', y=c, data=projData, ax=axs[i])
+    axs[i].set_title('%s在主题上分布小提琴图' % c)
+plt.tight_layout(h_pad=2)
+plt.savefig('report/figure/task5-boxplot.png', dpi=300)
+plt.clf()
 
 # task 6
 
@@ -184,6 +189,7 @@ def ftest_theme(dt, c):
     return fvalue, pvalue
 
 dt = {}
+dtm = {}
 for c in choices:
     randfs = list()
     groupfs = list()
@@ -210,14 +216,18 @@ for c in choices:
                 'weight': weightfs,
                 'group-weight': gwfs})
     dt[c] = res.var()
+    dtm[c] = res.mean()
 
 res = pd.DataFrame(dt)
-with open('report/task6-fvar.log', 'w', encoding='utf8') as resFile:
-    print(res, file=resFile)
+with open('report/task6-fvar.tex', 'w', encoding='utf8') as resFile:
+    print(res.to_latex(), file=resFile)
 res = res.apply(lambda d: (d - d.mean()) / d.std())
 res.transpose().plot(kind='bar')
 plt.savefig('report/figure/task6-fvar.png', dpi=300)
 plt.clf()
+
+with open('report/task6-fmean.tex', 'w', encoding='utf8') as resFile:
+    print(pd.DataFrame(dtm).to_latex(), file=resFile)
 
 # task 7
 
@@ -248,11 +258,11 @@ X_train, X_test, y_train, y_test = train_test_split(lrdata[features], lrdata['�
 clf = LogisticRegression().fit(X_train, y_train)
 y_pred = clf.predict(X_test)
 clfsvm = svm.SVC(C=1.5).fit(X_train, y_train)
-with open('report/task6-multi.log', 'w', encoding='utf8') as resFile:
+with open('report/task7-multi.log', 'w', encoding='utf8') as resFile:
     print('Logistic Regression accur. = %.2f%%' % (100 * np.mean(y_pred == y_test)), file=resFile)
     print('Support Vector Machine accur. = %.2f%%' % (clfsvm.score(X_test, y_test) * 100), file=resFile)
 
-with open('report/task6-two.log', 'w', encoding='utf8') as resFile:
+with open('report/task7-two.log', 'w', encoding='utf8') as resFile:
     for fs in itertools.combinations(classes, 2):
         lrdata = get_groups(normData.groupby('主题'), fs)
         X_train, X_test, y_train, y_test = train_test_split(lrdata[features], lrdata['群类别'], test_size=testRatio)
