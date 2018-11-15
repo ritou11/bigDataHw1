@@ -292,10 +292,12 @@ with open('report/meta/task7-multi.log', 'w', encoding='utf8') as resFile:
     print('Support Vector Machine accur. = %.2f%%' % (clfsvm.score(X_test, y_test) * 100), file=resFile)
 
 with open('report/meta/task7-two.log', 'w', encoding='utf8') as resFile:
+    print('Features: %s' % ','.join(features), file=resFile)
     for fs in itertools.combinations(classes, 2):
         lrdata = get_groups(normData.groupby('主题'), fs)
         X_train, X_test, y_train, y_test = train_test_split(lrdata[features], lrdata['群类别'], test_size=testRatio, random_state=2333)
         clf = LogisticRegression().fit(X_train, y_train)
         clfsvm = svm.SVC(C=1.5).fit(X_train, y_train)
         print(fs, file=resFile)
-        print('Logistic Regression accur. = %.2f%%, Support Vector Machine accur. = %.2f%%' % (clf.score(X_test, y_test) * 100, clfsvm.score(X_test, y_test) * 100), file=resFile)
+        print('Logistic accur. = %.2f%%, SVM accur. = %.2f%%' % (clf.score(X_test, y_test) * 100, clfsvm.score(X_test, y_test) * 100), file=resFile)
+        print('Coef. = [%s]' % (','.join(map(lambda f: '%.2f' % f, clf.coef_[0]))), file=resFile)

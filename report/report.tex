@@ -43,6 +43,9 @@
 
     \section{任务3} % (fold)
     Use your favorite statistics analysis software, like Matlab, R, Excel, SPSS or ...
+
+    在下边的任务开始前，首先需要指出的是，在任务7的分类过程中，我们注意到原同学群的年龄差不符合经验预期。经过检查发现，category表的主题名称有错误，应交换"投资理财"和"同学群"的主题名称。以下所有任务，都是基于修正后的数据进行的。
+
     \subsection{问题1} % (fold)
     \paragraph{问题描述} Draw the empirical probability density function of Col[7], i.e. the empirical pdf of average age. Does the data in this dimension follow Gaussian distribution? Test normality of Col[7].
 
@@ -65,7 +68,7 @@
     分组后进行同样的检验操作，得到结果如\cref{task3q2log}。可以直接看出，类别编号1，4，5组的平均年龄不满足正态性，类别编号2、3的组可以认为满足正态性。
     \lstinputlisting[label=task3q2log,caption={平均年龄分组正态性检验结果}]{meta/task3q2.log}
 
-    对于方差齐的检验，应使用课程中提及的2倍标准差判据\cite{anova}。对各组标准差进行计算，并取其中最大值、最小值进行比较，结果如\cref{task3std}。可见，同学会的平均年龄标准差是最大的，业主的平均年龄标准差是最小的。这个结论在\cref{fig:task2-boxplot}的箱图中也可以看出。另一方面，从社会经验上看，同学会存在于各个年龄段，而业主则主要是实现了积累的中老年，符合此处的结论。
+    对于方差齐的检验，应使用课程中提及的2倍标准差判据\cite{anova}。对各组标准差进行计算，并取其中最大值、最小值进行比较，结果如\cref{task3std}。可见，投资理财的平均年龄标准差是最大的，业主的平均年龄标准差是最小的。这个结论在\cref{fig:task2-boxplot}的箱图中也可以看出。另一方面，从社会经验上看，投资理财在各个年龄段均能引起人们的兴趣，而业主则主要是实现了积累并正处于一家之主地位的中年人，符合此处的结论。
     \lstinputlisting[label=task3std,caption={平均年龄标准差计算结果}]{meta/task3std.log}
 
     对平均年龄而言，标准差最大值最小值之比，约为2（仅仅略大），此时我们可以认为该分部满足方差齐的条件。
@@ -225,7 +228,7 @@
     \begin{equation}
       \label{eq:lr_poss}
       \begin{aligned}
-        h_\theta(x) &= 1-\frac{1}{1-e^{-\theta^T x}} \\
+        h_\theta(x) &= \frac{1}{1+e^{-\theta^T x}} \\
         P(y|x;\theta) &= (h_\theta(x))^y (1-h_\theta(x))^{1-y}
       \end{aligned}
     \end{equation}
@@ -239,13 +242,13 @@
     取似然函数的对数，得到\cref{eq:logl}。
     \begin{equation}
       \label{eq:logl}
-      l(\theta) = \log(L(\theta)) = \sum_{i}^n {y^{(i)} \log(h_\theta(x^{(i)})) + (1 - y^{(i)}) \log(h_\theta(1-x^{(i)}))}
+      l(\theta) = \log(L(\theta)) = \sum_{i}^n {y^{(i)} \log(h_\theta(x^{(i)})) + (1 - y^{(i)}) \log(1-h_\theta(x^{(i)}))}
     \end{equation}
 
     应用极大似然法，使用梯度下降求解问题$\min^{\theta} l(\theta)$即可求得一组参数$\theta^*$。
 
-    对于本问题，任选两个类别的群，应用Logistic Regression及SVM(Support Vector Machine)算法进行预测。SVM算法在多维分类问题上往往有出色的表现，近年来被广泛应用，此处作为对比。其中训练样本比例取为0.9，测试样本比例选为0.1。预测准确率统计如\cref{task7-two}所示。根据结果可见，在不同的类别之间，Logistics回归算法与SVM算法的表现均有所变化，且变化趋势相近，范围大致在75\%-95\%之间变化。同时，不同的类别组合下，Logistics回归与SVM各有优劣，总体上SVM算法更加稳定。
-    \lstinputlisting[label=task7-two,caption={Logistics回归对两组特征的分类结果}]{meta/task7-two.log}
+    对于本问题，任选两个类别的群，应用Logistic Regression及SVM(Support Vector Machine)算法进行预测。SVM算法在多维分类问题上往往有出色的表现，近年来被广泛应用，此处作为对比。其中训练样本比例取为0.9，测试样本比例选为0.1。预测准确率统计及相应的Logistics回归系数如\cref{task7-two}所示。根据结果可见，在不同的类别之间，Logistics回归算法与SVM算法的表现均有所变化，且变化趋势相近，范围大致在75\%-95\%之间变化。同时，不同的类别组合下，Logistics回归与SVM各有优劣，总体上SVM算法更加稳定。
+    \lstinputlisting[label=task7-two,caption={Logistics回归对两组特征的分类结果},breaklines=true]{meta/task7-two.log}
 
     尝试同时辨别5种类别的群，采用同样的样本划分方式，预测准确率如\cref{task7-multi}所示。此处可见，SVM算法在多类别划分上更有优势。
     \lstinputlisting[label=task7-multi,caption={Logistics回归对五组特征的分类结果}]{meta/task7-multi.log}
